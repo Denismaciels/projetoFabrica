@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <title>Relatório de Produção</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 30px;
+    }
+    input {
+      margin: 10px 0;
+      padding: 5px;
+      width: 300px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+    th, td {
+      border: 1px solid #ccc;
+      padding: 8px;
+      text-align: center;
+    }
+    .linha-total {
+      background-color: #dfe6e9;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <h2>Relatório Geral</h2>
+  <input type="text" id="pesquisa" placeholder="Pesquisar por data, ordem, referência ou pares..." oninput="filtrar()">
+  <table id="tabela">
+    <thead>
+      <tr>
+        <th>Data</th>
+        <th>Ordem</th>
+        <th>Referência</th>
+        <th>Tipos</th>
+        <th>Quantidade</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+    <tfoot>
+      <tr class="linha-total">
+        <td colspan="4" style="text-align:right;">TOTAL:</td>
+        <td id="total"></td>
+      </tr>
+    </tfoot>
+  </table>
+
+  <script>
+    let todosRegistros = [];
+
+    window.onload = () => {
+      todosRegistros = JSON.parse(localStorage.getItem("registros") || "[]");
+      preencherTabela(todosRegistros);
+    };
+
+    function preencherTabela(registros) {
+      const tbody = document.querySelector("#tabela tbody");
+      tbody.innerHTML = "";
+      let total = 0;
+
+      registros.forEach(reg => {
+        const linha = tbody.insertRow();
+        linha.insertCell(0).innerText = reg.data;
+        linha.insertCell(1).innerText = reg.ordem;
+        linha.insertCell(2).innerText = reg.referencia;
+        linha.insertCell(3).innerText = reg.tipos.join(", ");
+        linha.insertCell(4).innerText = reg.quantidade;
+        total += Number(reg.quantidade);
+      });
+
+      document.getElementById("total").innerText = total;
+    }
+
+    function filtrar() {
+      const termo = document.getElementById("pesquisa").value.toLowerCase();
+      const filtrados = todosRegistros.filter(reg =>
+        reg.data.toLowerCase().includes(termo) ||
+        reg.ordem.toString().includes(termo) ||
+        reg.referencia.toString().includes(termo) ||
+        reg.quantidade.toString().includes(termo)
+      );
+      preencherTabela(filtrados);
+    }
+  </script>
+</body>
+</html>

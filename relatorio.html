@@ -51,7 +51,11 @@
     </tfoot>
   </table>
 
+  <button onclick="goBack()">Voltar</button>
   <script>
+    function goBack() {
+  window.history.back();
+}
     let todosRegistros = [];
 
     window.onload = () => {
@@ -82,6 +86,7 @@
       const filtrados = todosRegistros.filter(reg =>
         reg.data.toLowerCase().includes(termo) ||
         reg.ordem.toString().includes(termo) ||
+        reg.tipos.toString().includes(termo) ||
         reg.referencia.toString().includes(termo) ||
         reg.quantidade.toString().includes(termo)
       );

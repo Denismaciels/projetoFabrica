@@ -57,6 +57,34 @@
     <button type="button" onclick="adicionar()">Adicionar</button>
   </form>
 
+  <!-- Modal de Edição -->
+<div id="modal-edicao" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background-color:rgba(0,0,0,0.5);">
+  <div style="background:#fff; margin: 10% auto; padding: 20px; width: 300px; border-radius: 10px; position:relative;">
+    <h3>Editar Registro</h3>
+    <form id="form-edicao">
+      <label>Data: <input type="date" id="edit-data"></label><br><br>
+      <label>Ordem: <input type="number" id="edit-ordem"></label><br><br>
+      <label>Referência: <input type="number" id="edit-referencia"></label><br><br>
+      <label>Tipos:<br>
+        <select id="edit-tipos" multiple size="6">
+          <option value="cab1">Cab1</option>
+          <option value="cab2">Cab2</option>
+          <option value="cab3">Cab3</option>
+          <option value="cab4">Cab4</option>
+          <option value="avesso">Avesso</option>
+          <option value="pano">Pano</option>
+        </select>
+      </label><br><br>
+      <label>Quantidade: <input type="number" id="edit-quantidade"></label><br><br>
+
+      <input type="hidden" id="edit-index">
+      <button type="button" onclick="salvarEdicao()">Salvar</button>
+      <button type="button" onclick="fecharModal()">Cancelar</button>
+    </form>
+  </div>
+</div>
+
+  
   <h3>Registros por Data</h3>
   <div id="registros-container"></div>
 
@@ -124,10 +152,24 @@
           total += registro.quantidade;
 
           const acoes = linha.insertCell(4);
+/////////////////////////////////////////////////////////
+         /* const btnExcluir = document.createElement("button");
+          btnExcluir.textContent = "Excluir";
+          btnExcluir.onclick = () => excluir(registro.index);
+          acoes.appendChild(btnExcluir);*/
+/////////////////////////////////////////////////////////
           const btnExcluir = document.createElement("button");
           btnExcluir.textContent = "Excluir";
           btnExcluir.onclick = () => excluir(registro.index);
           acoes.appendChild(btnExcluir);
+
+          const btnEditar = document.createElement("button");
+          btnEditar.textContent = "Editar";
+          btnEditar.style.marginLeft = "10px";
+          btnEditar.onclick = () => editarLinha(registro.index);
+          acoes.appendChild(btnEditar);
+
+          
         });
 
         // Linha total
@@ -147,6 +189,61 @@
       localStorage.setItem("registros", JSON.stringify(registros));
       carregarDoLocalStorage();
     }
+    function editarLinha(index) {
+  const registros = JSON.parse(localStorage.getItem("registros") || "[]");
+  const registro = registros[index];
+
+  // Preencher os campos com os dados atuais
+  document.getElementById("edit-data").value = registro.data;
+  document.getElementById("edit-ordem").value = registro.ordem;
+  document.getElementById("edit-referencia").value = registro.referencia;
+  document.getElementById("edit-quantidade").value = registro.quantidade;
+  document.getElementById("edit-index").value = index;
+
+  // Selecionar as opções do select múltiplo
+  const select = document.getElementById("edit-tipos");
+  Array.from(select.options).forEach(option => {
+    option.selected = registro.tipos.includes(option.value);
+  });
+
+  document.getElementById("modal-edicao").style.display = "block";
+}
+function fecharModal() {
+  document.getElementById("modal-edicao").style.display = "none";
+}
+
+function salvarEdicao() {
+  const index = document.getElementById("edit-index").value;
+  const registros = JSON.parse(localStorage.getItem("registros") || "[]");
+
+  const data = document.getElementById("edit-data").value;
+  const ordem = document.getElementById("edit-ordem").value;
+  const referencia = document.getElementById("edit-referencia").value;
+  const quantidade = document.getElementById("edit-quantidade").value;
+  const tiposSelecionados = Array.from(document.getElementById("edit-tipos").selectedOptions).map(option => option.value);
+
+  if (!data || !ordem || !referencia || tiposSelecionados.length === 0 || !quantidade) {
+    alert("Preencha todos os campos.");
+    return;
+  }
+
+  registros[index] = {
+    data,
+    ordem,
+    referencia,
+    tipos: tiposSelecionados,
+    quantidade
+  };
+
+  localStorage.setItem("registros", JSON.stringify(registros));
+  fecharModal();
+  atualizarTabela();
+}
+    function atualizarTabela() {
+  carregarDoLocalStorage();
+}
+
+
   </script>
 </body>
 </html>

@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <title>Cadastro de Produção</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 30px;
+    }
+    form {
+      background-color: #f5f5f5;
+      padding: 20px;
+      border-radius: 10px;
+      width: 300px;
+    }
+    label {
+      display: block;
+      margin-bottom: 10px;
+    }
+    table {
+      margin-top: 20px;
+      width: 100%;
+      border-collapse: collapse;
+    }
+    th, td {
+      padding: 10px;
+      text-align: center;
+      border: 1px solid #ccc;
+    }
+    .linha-total {
+      background-color: #dfe6e9;
+      font-weight: bold;
+    }
+    .bloco-data {
+      margin-bottom: 40px;
+    }
+  </style>
+</head>
+<body>
+  <h2>Formulário de Produção</h2>
+  <form id="formulario">
+    <label>Data: <input type="date" id="data"></label><br>
+    <label>Ordem: <input type="number" id="ordem"></label><br>
+    <label>Referência: <input type="number" id="referencia"></label><br>
+    <label>Tipo:<br>
+      <select id="tipos" multiple size="6">
+        <option value="cab1">Cab1</option>
+        <option value="cab2">Cab2</option>
+        <option value="cab3">Cab3</option>
+        <option value="cab4">Cab4</option>
+        <option value="avesso">Avesso</option>
+        <option value="pano">Pano</option>
+      </select>
+    </label><br>
+    <label>Quantidade de pares: <input type="number" id="quantidade"></label><br><br>
+    <button type="button" onclick="adicionar()">Adicionar</button>
+  </form>
+
+  <h3>Registros por Data</h3>
+  <div id="registros-container"></div>
+
+  <script>
+    window.onload = carregarDoLocalStorage;
+
+    function adicionar() {
+      const data = document.getElementById("data").value;
+      const ordem = document.getElementById("ordem").value;
+      const referencia = document.getElementById("referencia").value;
+      const quantidade = document.getElementById("quantidade").value;
+      const tiposSelecionados = Array.from(document.getElementById("tipos").selectedOptions).map(o => o.value);
+
+      if (!data || !ordem || !referencia || tiposSelecionados.length === 0 || !quantidade) {
+        alert("Preencha todos os campos.");
+        return;
+      }
+
+      const novoRegistro = {
+        data,
+        ordem,
+        referencia,
+        tipos: tiposSelecionados,
+        quantidade: Number(quantidade)
+      };
+
+      const registros = JSON.parse(localStorage.getItem("registros") || "[]");
+      registros.push(novoRegistro);
+      localStorage.setItem("registros", JSON.stringify(registros));
+      document.getElementById("formulario").reset();
+      carregarDoLocalStorage();
+    }
+
+    function carregarDoLocalStorage() {
+      const container = document.getElementById("registros-container");
+      container.innerHTML = "";
+      const registros = JSON.parse(localStorage.getItem("registros") || "[]");
+
+      const agrupadosPorData = {};
+      registros.forEach((r, i) => {
+        if (!agrupadosPorData[r.data]) agrupadosPorData[r.data] = [];
+        agrupadosPorData[r.data].push({...r, index: i});
+      });
+
+      for (let data in agrupadosPorData) {
+        const bloco = document.createElement("div");
+        bloco.className = "bloco-data";
+
+        const titulo = document.createElement("h4");
+        titulo.innerText = `Data: ${data}`;
+        bloco.appendChild(titulo);
+
+        const tabela = document.createElement("table");
+        const thead = tabela.createTHead();
+        thead.innerHTML = `<tr><th>Ordem</th><th>Referência</th><th>Tipos</th><th>Quantidade</th><th>Ações</th></tr>`;
+        const tbody = document.createElement("tbody");
+
+        let total = 0;
+        agrupadosPorData[data].forEach(registro => {
+          const linha = tbody.insertRow();
+          linha.insertCell(0).innerText = registro.ordem;
+          linha.insertCell(1).innerText = registro.referencia;
+          linha.insertCell(2).innerText = registro.tipos.join(", ");
+          linha.insertCell(3).innerText = registro.quantidade;
+          total += registro.quantidade;
+
+          const acoes = linha.insertCell(4);
+          const btnExcluir = document.createElement("button");
+          btnExcluir.textContent = "Excluir";
+          btnExcluir.onclick = () => excluir(registro.index);
+          acoes.appendChild(btnExcluir);
+        });
+
+        // Linha total
+        const linhaTotal = tbody.insertRow();
+        linhaTotal.className = "linha-total";
+        linhaTotal.innerHTML = `<td colspan="3" style="text-align:right;">TOTAL:</td><td>${total}</td><td></td>`;
+
+        tabela.appendChild(tbody);
+        bloco.appendChild(tabela);
+        container.appendChild(bloco);
+      }
+    }
+
+    function excluir(index) {
+      let registros = JSON.parse(localStorage.getItem("registros") || "[]");
+      registros.splice(index, 1);
+      localStorage.setItem("registros", JSON.stringify(registros));
+      carregarDoLocalStorage();
+    }
+  </script>
+</body>
+</html>

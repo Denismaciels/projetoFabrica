@@ -99,7 +99,7 @@
       tbody.innerHTML = "";
       let total = 0;
 
-      .sort((a, b) => {
+      registros.sort((a, b) => {
   const dataDiff = new Date(a.data) - new Date(b.data);
   return dataDiff !== 0 ? dataDiff : a.ordem - b.ordem;
 })

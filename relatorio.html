@@ -41,6 +41,20 @@
   </style>
 </head>
 <body>
+  <!--Verificação de usuario -->
+  <script>
+  const usuarioLogado = localStorage.getItem("usuarioLogado");
+  if (!usuarioLogado) {
+    window.location.href = "login.html";
+  }
+</script>
+
+<p><strong>Usuário logado:</strong> <span id="nomeUsuario"></span></p>
+
+<script>
+  document.getElementById("nomeUsuario").innerText = usuarioLogado;
+</script>
+
   <h2>Relatório Geral</h2>
 
   <input type="text" id="pesquisa" placeholder="Buscar por data, ordem,tipo, referência ou pares..." oninput="filtrar()">

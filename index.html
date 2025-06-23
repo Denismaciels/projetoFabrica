@@ -48,6 +48,7 @@
 </script>
 
 <p><strong>Usuário logado:</strong> <span id="nomeUsuario"></span></p>
+<button onclick="abrirConfiguracoes()">⚙️ Configurar Tema</button>
 
 <script>
   document.getElementById("nomeUsuario").innerText = usuarioLogado;
@@ -60,6 +61,7 @@
     <label>Ordem: <input type="number" id="ordem"></label><br>
     <label>Referência: <input type="number" id="referencia"></label><br>
     <label>Tipo:<br>
+      <!--
       <select id="tipos" multiple size="6">
         <option value="cab1">Cab1</option>
         <option value="cab2">Cab2</option>
@@ -68,6 +70,8 @@
         <option value="avesso">Avesso</option>
         <option value="pano">Pano</option>
       </select>
+      -->
+      <input type="text" id="tipos">
     </label><br>
     <label>Quantidade de pares: <input type="number" id="quantidade"></label><br><br>
     <button type="button" onclick="adicionar()">Adicionar</button>
@@ -101,6 +105,23 @@
     </form>
   </div>
 </div>
+<!-- Modal de Edição de tema -->
+  <div id="modal-config" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background-color:rgba(0,0,0,0.4);">
+  <div style="background:#fff; margin:10% auto; padding:20px; width:300px; border-radius:10px;">
+    <h3>Configuração de Tema</h3>
+    
+    <label>Cor de Fundo:
+      <input type="color" id="corFundo">
+    </label><br><br>
+
+    <label>Imagem de Fundo (URL):
+      <input type="text" id="urlImagem" placeholder="https://...">
+    </label><br><br>
+
+    <button onclick="salvarTema()">Salvar</button>
+    <button onclick="fecharConfiguracoes()">Cancelar</button>
+  </div>
+</div>
 
   
   <h3>Registros por Data</h3>
@@ -109,6 +130,50 @@
   <script>
     window.onload = carregarDoLocalStorage;
 
+// Aplica tema salvo
+  function aplicarTema() {
+    const cor = localStorage.getItem("temaCor");
+    const img = localStorage.getItem("temaImagem");
+
+    if (img) {
+      document.body.style.background = `url(${img}) no-repeat center center fixed`;
+      document.body.style.backgroundSize = "cover";
+    } else if (cor) {
+      document.body.style.background = cor;
+    } else {
+      // Tema padrão (degradê amarelo)
+      document.body.style.background = "linear-gradient(to bottom right, #f6e58d, #e1a100)";
+    }
+  }
+
+  function abrirConfiguracoes() {
+    document.getElementById("modal-config").style.display = "block";
+  }
+
+  function fecharConfiguracoes() {
+    document.getElementById("modal-config").style.display = "none";
+  }
+
+  function salvarTema() {
+    const cor = document.getElementById("corFundo").value;
+    const img = document.getElementById("urlImagem").value.trim();
+
+    if (img) {
+      localStorage.setItem("temaImagem", img);
+      localStorage.removeItem("temaCor");
+    } else {
+      localStorage.setItem("temaCor", cor);
+      localStorage.removeItem("temaImagem");
+    }
+
+    aplicarTema();
+    fecharConfiguracoes();
+  }
+
+  window.onload = () => {
+    aplicarTema();
+  };
+    
     function adicionar() {
       const data = document.getElementById("data").value;
       const ordem = document.getElementById("ordem").value;

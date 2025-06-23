@@ -33,9 +33,7 @@
   </style>
 </head>
 <body>
-  <nav>
-  <button class="btn-config" onclick="abrirConfiguracoes()">⚙️ Configurar Tema</button>
-</nav>
+
   <!--Modal para escolher tema da Tela -->
 <div id="modal-config" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background-color:rgba(0,0,0,0.4);">
   <div style="background:#fff; margin:10% auto; padding:20px; width:300px; border-radius:10px;">
@@ -60,6 +58,9 @@
     <input type="text" id="usuario" placeholder="Usuário">
     <input type="password" id="senha" placeholder="Senha">
     <button class="btn" onclick="login()">Entrar</button>
+     
+  <button class="btn-config" onclick="abrirConfiguracoes()">⚙️ Configurar Tema</button>
+
   </div>
 
   <script>

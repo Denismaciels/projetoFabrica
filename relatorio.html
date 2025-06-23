@@ -162,7 +162,10 @@
   const wb = XLSX.utils.book_new();
   XLSX.utils.book_append_sheet(wb, ws, "Relatório");
 
-  XLSX.writeFile(wb, "relatorio-producao.xlsx");
+ // XLSX.writeFile(wb, "relatorio-producao.xlsx");
+      const usuario = localStorage.getItem("usuarioLogado") || "usuario";
+XLSX.writeFile(wb, `Produção do ${usuario}.xlsx`);
+
 }
 
 

@@ -20,6 +20,7 @@
       margin-bottom: 10px;
     }
     table {
+      background-color:white;
       margin-top: 20px;
       width: 100%;
       border-collapse: collapse;
@@ -133,49 +134,7 @@
   <script>
     window.onload = carregarDoLocalStorage;
 
-// Aplica tema salvo
-  function aplicarTema() {
-    const cor = localStorage.getItem("temaCor");
-    const img = localStorage.getItem("temaImagem");
 
-    if (img) {
-      document.body.style.background = `url(${img}) no-repeat center center fixed`;
-      document.body.style.backgroundSize = "cover";
-    } else if (cor) {
-      document.body.style.background = cor;
-    } else {
-      // Tema padrão (degradê amarelo)
-      document.body.style.background = "linear-gradient(to bottom right, #f6e58d, #e1a100)";
-    }
-  }
-
-  function abrirConfiguracoes() {
-    document.getElementById("modal-config").style.display = "block";
-  }
-
-  function fecharConfiguracoes() {
-    document.getElementById("modal-config").style.display = "none";
-  }
-
-  function salvarTema() {
-    const cor = document.getElementById("corFundo").value;
-    const img = document.getElementById("urlImagem").value.trim();
-
-    if (img) {
-      localStorage.setItem("temaImagem", img);
-      localStorage.removeItem("temaCor");
-    } else {
-      localStorage.setItem("temaCor", cor);
-      localStorage.removeItem("temaImagem");
-    }
-
-    aplicarTema();
-    fecharConfiguracoes();
-  }
-
-  window.onload = () => {
-    aplicarTema();
-  };
     
     function adicionar() {
       const data = document.getElementById("data").value;
@@ -329,7 +288,49 @@ function salvarEdicao() {
   carregarDoLocalStorage();
 }
 
+// Aplica tema salvo
+  function aplicarTema() {
+    const cor = localStorage.getItem("temaCor");
+    const img = localStorage.getItem("temaImagem");
 
+    if (img) {
+      document.body.style.background = `url(${img}) no-repeat center center fixed`;
+      document.body.style.backgroundSize = "cover";
+    } else if (cor) {
+      document.body.style.background = cor;
+    } else {
+      // Tema padrão (degradê amarelo)
+      document.body.style.background = "linear-gradient(to bottom right, #f6e58d, #e1a100)";
+    }
+  }
+
+  function abrirConfiguracoes() {
+    document.getElementById("modal-config").style.display = "block";
+  }
+
+  function fecharConfiguracoes() {
+    document.getElementById("modal-config").style.display = "none";
+  }
+
+  function salvarTema() {
+    const cor = document.getElementById("corFundo").value;
+    const img = document.getElementById("urlImagem").value.trim();
+
+    if (img) {
+      localStorage.setItem("temaImagem", img);
+      localStorage.removeItem("temaCor");
+    } else {
+      localStorage.setItem("temaCor", cor);
+      localStorage.removeItem("temaImagem");
+    }
+
+    aplicarTema();
+    fecharConfiguracoes();
+  }
+
+  window.onload = () => {
+    aplicarTema();
+  };
   </script>
 </body>
 </html>

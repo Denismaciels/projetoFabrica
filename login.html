@@ -6,7 +6,7 @@
   <title>Login - Produção</title>
   <style>
     body {
-      background-image: url("https://png.pngtree.com/thumb_back/fh260/background/20230425/pngtree-pair-of-dirty-shoes-resting-on-top-of-a-wooden-floor-image_2517053.jpg");
+     
       background-repeat:no-repeat;
       font-family: Arial;
       display: flex;
@@ -26,15 +26,16 @@
       width: 100%;
       padding: 8px;
     }
-    button {
+    btn {
       width: 100%;
       padding: 10px;
     }
   </style>
 </head>
 <body>
-  <button onclick="abrirConfiguracoes()">⚙️ Configurar Tema</button>
-
+  <nav>
+  <button class="btn-config" onclick="abrirConfiguracoes()">⚙️ Configurar Tema</button>
+</nav>
   <!--Modal para escolher tema da Tela -->
 <div id="modal-config" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background-color:rgba(0,0,0,0.4);">
   <div style="background:#fff; margin:10% auto; padding:20px; width:300px; border-radius:10px;">
@@ -48,8 +49,8 @@
       <input type="text" id="urlImagem" placeholder="https://...">
     </label><br><br>
 
-    <button onclick="salvarTema()">Salvar</button>
-    <button onclick="fecharConfiguracoes()">Cancelar</button>
+    <button class="btn" onclick="salvarTema()">Salvar</button>
+    <button class="btn" onclick="fecharConfiguracoes()">Cancelar</button>
   </div>
 </div>
 
@@ -58,7 +59,7 @@
     <h2>Login Produção</h2>
     <input type="text" id="usuario" placeholder="Usuário">
     <input type="password" id="senha" placeholder="Senha">
-    <button onclick="login()">Entrar</button>
+    <button class="btn" onclick="login()">Entrar</button>
   </div>
 
   <script>

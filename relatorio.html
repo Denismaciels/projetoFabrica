@@ -3,26 +3,37 @@
 <head>
   <meta charset="UTF-8">
   <title>Relatório de Produção</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
   <style>
     body {
       font-family: Arial, sans-serif;
       margin: 30px;
     }
+
     input {
-      margin: 10px 0;
+      margin-bottom: 10px;
       padding: 5px;
       width: 300px;
     }
+
+    button {
+      margin: 5px;
+      padding: 10px;
+      cursor: pointer;
+    }
+
     table {
       width: 100%;
       border-collapse: collapse;
       margin-top: 20px;
     }
+
     th, td {
       border: 1px solid #ccc;
       padding: 8px;
       text-align: center;
     }
+
     .linha-total {
       background-color: #dfe6e9;
       font-weight: bold;
@@ -31,7 +42,16 @@
 </head>
 <body>
   <h2>Relatório Geral</h2>
-  <input type="text" id="pesquisa" placeholder="Pesquisar por data, ordem, referência ou pares..." oninput="filtrar()">  </br>   <button onclick="goBack()">Voltar</button>
+
+  <input type="text" id="pesquisa" placeholder="Buscar por data, ordem,tipo, referência ou pares..." oninput="filtrar()">
+
+  <div>
+    <button onclick="exportarParaExcel()">Exportar para Excel</button>
+    <input type="file" id="arquivoExcel" onchange="importarExcel()" accept=".xlsx, .xls">
+
+    <button onclick="window.location.href='index.html'">Voltar ao Cadastro</button>
+  </div>
+
   <table id="tabela">
     <thead>
       <tr>
@@ -51,11 +71,7 @@
     </tfoot>
   </table>
 
-
   <script>
-    function goBack() {
-  window.history.back();
-}
     let todosRegistros = [];
 
     window.onload = () => {
@@ -92,6 +108,84 @@
       );
       preencherTabela(filtrados);
     }
+/*
+    function exportarParaExcel() {
+      const registros = todosRegistros.map(reg => ({
+        Data: reg.data,
+        Ordem: reg.ordem,
+        Referência: reg.referencia,
+        Tipos: reg.tipos.join(", "),
+        Quantidade: reg.quantidade
+      }));
+
+      const ws = XLSX.utils.json_to_sheet(registros);
+      const wb = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(wb, ws, "Relatorio");
+
+      XLSX.writeFile(wb, "relatorio-producao.xlsx");
+    }
+    */
+    function exportarParaExcel() {
+  const registros = todosRegistros.map(reg => ({
+    Data: reg.data,
+    Ordem: reg.ordem,
+    Referência: reg.referencia,
+    Tipos: reg.tipos.join(", "),
+    Quantidade: reg.quantidade
+  }));
+
+  // Adiciona linha de total
+  const total = registros.reduce((soma, r) => soma + Number(r.Quantidade), 0);
+  registros.push({
+    Data: "",
+    Ordem: "",
+    Referência: "",
+    Tipos: "TOTAL",
+    Quantidade: total
+  });
+
+  const ws = XLSX.utils.json_to_sheet(registros);
+  const wb = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, ws, "Relatório");
+
+  XLSX.writeFile(wb, "relatorio-producao.xlsx");
+}
+
+
+    function importarExcel() {
+  const input = document.getElementById("arquivoExcel");
+  const file = input.files[0];
+  if (!file) return;
+
+  const reader = new FileReader();
+  reader.onload = function (e) {
+    const data = new Uint8Array(e.target.result);
+    const workbook = XLSX.read(data, { type: "array" });
+
+    const primeiraAba = workbook.SheetNames[0];
+    const dados = XLSX.utils.sheet_to_json(workbook.Sheets[primeiraAba]);
+
+    // Limpa os registros antigos
+    localStorage.removeItem("registros");
+
+    // Formata e salva no localStorage
+    const novosRegistros = dados.map(r => ({
+      data: r.Data,
+      ordem: r.Ordem,
+      referencia: r.Referência,
+      tipos: r.Tipos.split(',').map(t => t.trim()),
+      quantidade: Number(r.Quantidade)
+    }));
+
+    localStorage.setItem("registros", JSON.stringify(novosRegistros));
+    todosRegistros = novosRegistros;
+    preencherTabela(todosRegistros);
+    alert("Importado com sucesso!");
+  };
+
+  reader.readAsArrayBuffer(file);
+}
+
   </script>
 </body>
 </html>

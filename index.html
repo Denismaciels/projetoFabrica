@@ -174,7 +174,9 @@
         agrupadosPorData[r.data].push({...r, index: i});
       });
 
-      for (let data in agrupadosPorData) {
+     const datasOrdenadas = Object.keys(agrupadosPorData).sort((a, b) => new Date(a) - new Date(b));
+for (let data of datasOrdenadas) {
+
         const bloco = document.createElement("div");
         bloco.className = "bloco-data";
 

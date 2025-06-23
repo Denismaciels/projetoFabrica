@@ -99,7 +99,11 @@
       tbody.innerHTML = "";
       let total = 0;
 
-      registros.forEach(reg => {
+      .sort((a, b) => {
+  const dataDiff = new Date(a.data) - new Date(b.data);
+  return dataDiff !== 0 ? dataDiff : a.ordem - b.ordem;
+})
+
         const linha = tbody.insertRow();
         linha.insertCell(0).innerText = reg.data;
         linha.insertCell(1).innerText = reg.ordem;

@@ -65,6 +65,7 @@
     
       <select id="tipos" multiple size="6">
         <option value="cab1">Cab</option>
+        <option value="forro">Forro</option>
         <option value="biqueira">Biquiera</option>
         <option value="debrumInteiro">Debrum Inteiro</option>
         <option value="debrumMedio">Debrum medio</option>
@@ -147,7 +148,7 @@
       const quantidade = document.getElementById("quantidade").value;
       const tiposSelecionados = Array.from(document.getElementById("tipos").selectedOptions).map(o => o.value);
 
-      if (!data || !ordem || !referencia || tiposSelecionados.length === 0 || !quantidade) {
+      if (!data || !ordem && !referencia || tiposSelecionados.length === 0 || !quantidade) {
         alert("Preencha todos os campos.");
         return;
       }

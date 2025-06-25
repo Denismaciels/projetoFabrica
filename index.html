@@ -95,7 +95,7 @@
       <label>Ordem: <input type="number" id="edit-ordem"></label><br><br>
       <label>Referência: <input type="number" id="edit-referencia"></label><br><br>
       <label>Tipos:<br>
-        <select id="edit-tipos" multiple size="6">
+       <!-- <select id="edit-tipos" multiple size="6">
           <option value="cab1">Cab1</option>
           <option value="cab2">Cab2</option>
           <option value="cab3">Cab3</option>
@@ -105,6 +105,22 @@
           <option value="aviamento"> Aviamento</option>
           <option value="espuma"> Espuma</option>
         </select>
+        -->
+        
+      <select id="edit-tipos" multiple size="6">
+        <option value="cab1">Cab</option>
+        <option value="forro">Forro</option>
+        <option value="biqueira">Biquiera</option>
+        <option value="debrumInteiro">Debrum Inteiro</option>
+        <option value="debrumMedio">Debrum medio</option>
+        <option value="avesso">Avesso</option>
+        <option value="pano">Pano</option>
+        <option value="capaDeSalto">Capa de Salto</option>
+        <option value="enfeite">enfeite</option>
+        <option value="Enchimento">Enchimeto</option>
+        <option value="aviamento">Aviamento</option>
+        <option value="espuma">Espuma</option>
+      </select>
       </label><br><br>
       <label>Quantidade: <input type="number" id="edit-quantidade"></label><br><br>
 
@@ -274,7 +290,7 @@ function salvarEdicao() {
   const quantidade = document.getElementById("edit-quantidade").value;
   const tiposSelecionados = Array.from(document.getElementById("edit-tipos").selectedOptions).map(option => option.value);
 
-  if (!data || !ordem || !referencia || tiposSelecionados.length === 0 || !quantidade) {
+  if (!data || !ordem && !referencia || tiposSelecionados.length === 0 || !quantidade) {
     alert("Preencha todos os campos.");
     return;
   }

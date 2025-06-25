@@ -287,7 +287,7 @@ function salvarEdicao() {
   const data = document.getElementById("edit-data").value;
   const ordem = document.getElementById("edit-ordem").value;
   const referencia = document.getElementById("edit-referencia").value;
-  const quantidade = document.getElementById("edit-quantidade").value;
+  const quantidade = Number(document.getElementById("edit-quantidade").value);
   const tiposSelecionados = Array.from(document.getElementById("edit-tipos").selectedOptions).map(option => option.value);
 
   if (!data || !ordem || !referencia || tiposSelecionados.length === 0 || !quantidade) {
